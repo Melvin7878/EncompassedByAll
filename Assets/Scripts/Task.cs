@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Task : MonoBehaviour
 {
+    //Variables
     [SerializeField]
     private string taskName;
 
@@ -28,6 +29,7 @@ public abstract class Task : MonoBehaviour
         OnStart();
     }
 
+    #region Highlight related
     public void HighlightTask()
     {
         if (interactSprite != null)
@@ -38,7 +40,9 @@ public abstract class Task : MonoBehaviour
     {
         spriteRenderer.sprite = originalSprite;
     }
+    #endregion
 
+    #region Solve related
     public void SetAsUnresolved()
     {
         resolved = false;
@@ -49,6 +53,7 @@ public abstract class Task : MonoBehaviour
     {
         resolved = true;
     }
+    #endregion
 
     public abstract void OnInteract();
 
