@@ -5,7 +5,7 @@ using UnityEngine;
 public class LightningTask : Task
 {
     [SerializeField]
-    ClickGamePanel gamePanel;
+    LightningGamePanel gamePanel;
 
     protected override void OnStart()
     {
