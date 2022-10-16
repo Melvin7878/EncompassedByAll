@@ -5,7 +5,7 @@ using UnityEngine;
 public class LightningGamePanel : MonoBehaviour
 {
     //Variables
-    [SerializeField] GameObject lastFirstSelectedGameObject;
+    GameObject lastFirstSelectedGameObject;
     [SerializeField] GameObject projectile;  //prefab
 
     [SerializeField] GameObject pos1;
@@ -16,7 +16,6 @@ public class LightningGamePanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame

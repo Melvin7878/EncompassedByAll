@@ -1849,6 +1849,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2138326607}
     m_Modifications:
+    - target: {fileID: 2160887516481156045, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2301246279325970416, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4691493906557262529, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
       propertyPath: m_Name
       value: ExitButton
@@ -1985,7 +1993,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670190d81d10345438c640b573fac344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastFirstSelectedGameObject: {fileID: 0}
   projectile: {fileID: 0}
   pos1: {fileID: 0}
   pos2: {fileID: 0}
