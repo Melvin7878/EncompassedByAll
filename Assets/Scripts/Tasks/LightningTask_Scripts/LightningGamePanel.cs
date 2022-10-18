@@ -8,8 +8,8 @@ public class LightningGamePanel : MonoBehaviour
     GameObject lastFirstSelectedGameObject;
     [SerializeField] GameObject projectile;  //prefab
 
-    [SerializeField] GameObject pos1;
-    [SerializeField] GameObject pos2;
+    [SerializeField] GameObject shootingPosition1;
+    [SerializeField] GameObject shootingPosition2;
 
     [SerializeField] Task masterTask;
 
