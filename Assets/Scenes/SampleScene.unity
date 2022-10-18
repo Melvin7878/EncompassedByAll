@@ -1994,8 +1994,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectile: {fileID: 0}
-  pos1: {fileID: 0}
-  pos2: {fileID: 0}
+  shootingPosition1: {fileID: 0}
+  shootingPosition2: {fileID: 0}
   masterTask: {fileID: 2138326611}
 --- !u!1001 &7467045678431576766
 PrefabInstance:
