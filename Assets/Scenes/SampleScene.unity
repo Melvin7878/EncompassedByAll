@@ -1993,10 +1993,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670190d81d10345438c640b573fac344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 0}
-  shootingPosition1: {fileID: 0}
-  shootingPosition2: {fileID: 0}
+  projectile: {fileID: 6801614034475979187, guid: 2f86bb42a132186458b964343ce1c0ef, type: 3}
   masterTask: {fileID: 2138326611}
+  shootingPosition1: {fileID: 1729266542496878267}
+  shootingPosition2: {fileID: 1729266542496878266}
+--- !u!224 &1729266542496878266 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8620645301625535074, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
+  m_PrefabInstance: {fileID: 1729266542496878262}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1729266542496878267 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4283950429324821166, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
+  m_PrefabInstance: {fileID: 1729266542496878262}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7467045678431576766
 PrefabInstance:
   m_ObjectHideFlags: 0
