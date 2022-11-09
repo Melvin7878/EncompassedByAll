@@ -7,74 +7,85 @@ public class LightningGamePanel : MonoBehaviour
     //Variables
     [Header("Create objects and reference")]
     GameObject lastFirstSelectedGameObject;
-    [SerializeField] GameObject projectile;  //prefab
-    private GameObject[] projectiles;
+
+    [SerializeField] GameObject projectile;  //prefab bullet
+    //GameObject[] projectiles = new GameObject[2];
+    public List<GameObject> projectilesList;
 
     [SerializeField] Task masterTask;
 
     [Header("Shooting position related variables")]
     [SerializeField] RectTransform shootingPosition1;
     [SerializeField] RectTransform shootingPosition2;
-    private RectTransform[] shootingPositions = new RectTransform[2];
+    //private RectTransform[] shootingPositions = new RectTransform[2];
 
     private int rotationValue = 60;
 
+    //set a variable that handles the max amount of bullets before we're done with the task
 
     // Start is called before the first frame update
     void Start()
     {
-        shootingPositions[0] = shootingPosition1;
-        shootingPositions[1] = shootingPosition2;
+        Debug.Log("in here");
+        //shootingPositions[0] = shootingPosition1;
+        //shootingPositions[1] = shootingPosition2;
 
-        for (int i = 0; i < shootingPositions.Length; i++)
-        {
-            //Setting the rotation of the shooting positions
-            shootingPositions[i].rotation = Quaternion.identity;
-            if (i > 0 && i < shootingPositions.Length)
-            {
-                shootingPositions[i].rotation = Quaternion.Euler(rotationValue, 0, 0);
-                Debug.Log($"pos 1 rotation: {shootingPositions[i].rotation.x}");
-            }
-            else
-            {
-                shootingPositions[i].rotation = Quaternion.Euler(-rotationValue, 0, 0);
-                Debug.Log($"pos 2 rotation: {shootingPositions[i].rotation.x}");
-            }
-
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        InstantiateShoots(projectiles,, projectile, shootingPosition1, shootingPosition2);
+        InstantiateBullets(projectilesList, projectile, shootingPosition1, shootingPosition2);
+        SetValues(projectilesList, shootingPosition1, shootingPosition2);
     }
 
     #region Shooting related functions
-
-    void InstantiateShoots(GameObject[] bulletsCollection, GameObject bullet, RectTransform position1, RectTransform position2)
+    void InstantiateBullets(List<GameObject> bulletsCollection, GameObject bullet, RectTransform position1, RectTransform position2)
     {
-        Vector2 pos1Position = new Vector2(position1.position.x, position1.position.y);
-        Vector2 pos2Position = new Vector2(position2.position.x, position2.position.y);
-        for (int i = 0; i < shootingPositions.Length; i++)
+        for (int i = 0; i < bulletsCollection.Count; i++)
         {
-            Instantiate(bulletsCollection[i]);
+            Instantiate(bullet);
 
-            //if (i > 0 && i < shootingPositions.Length)
-            //{
-            //    bullet.transform.position = pos1Position;
-            //    Debug.Log(bullet.transform.position);
-            //}
-            //else
-            //{
-            //    bullet.transform.position = pos2Position;
-            //    Debug.Log(bullet.transform.position);
-            //}
+            //bulletsCollection[i] = bullet;
+            projectilesList.Add(bullet);
         }
-
-
     }
 
+    void SetValues(List<GameObject> bulletsCollection, /*GameObject bullet,*/ RectTransform shootPos1, RectTransform shootPos2)
+    {
+        Vector2 pos1Position = new Vector2(shootPos1.position.x, shootPos1.position.y);
+        Vector2 pos2Position = new Vector2(shootPos2.position.x, shootPos2.position.y);
+
+        Debug.Log("in function");
+        //Set position of bullets
+        for (int i = 0; i < bulletsCollection.Count; i++)            //check conditionals
+        {
+            Debug.Log("in for loop");
+            if (i > 0 && i < bulletsCollection.Count)
+            {
+                bulletsCollection[i].transform.position = pos1Position;
+                Debug.Log(bulletsCollection[i].transform.position);
+            }
+            else
+            {
+                bulletsCollection[i].transform.position = pos2Position;
+                Debug.Log(bulletsCollection[i].transform.position);
+            }
+        }
+
+        //Set rotation of bullets
+        for (int i = 0; i < bulletsCollection.Count; i++)
+        {
+            //Setting the rotation of the shooting positions
+            bulletsCollection[i].transform.rotation = Quaternion.identity;
+
+            if (i > 0 && i < bulletsCollection.Count)
+            {
+                bulletsCollection[i].transform.rotation = Quaternion.Euler(rotationValue, 0, 0);
+                Debug.Log($"pos 1 rotation: {bulletsCollection[i].transform.rotation.x}");
+            }
+            else
+            {
+                bulletsCollection[i].transform.rotation = Quaternion.Euler(-rotationValue, 0, 0);
+                Debug.Log($"pos 2 rotation: {bulletsCollection[i].transform.rotation.x}");
+            }
+        }
+    }
     #endregion
 
     #region Game mechanic-smooth functions
