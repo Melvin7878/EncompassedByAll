@@ -1993,10 +1993,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670190d81d10345438c640b573fac344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 6801614034475979187, guid: 2f86bb42a132186458b964343ce1c0ef, type: 3}
   masterTask: {fileID: 2138326611}
+  projectile: {fileID: 6801614034475979187, guid: 2f86bb42a132186458b964343ce1c0ef, type: 3}
+  projectilesList: []
   shootingPosition1: {fileID: 1729266542496878267}
   shootingPosition2: {fileID: 1729266542496878266}
+  gameInitiated: 0
 --- !u!224 &1729266542496878266 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8620645301625535074, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
