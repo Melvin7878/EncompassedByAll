@@ -20,7 +20,7 @@ public class LightningGamePanel : MonoBehaviour
     [SerializeField] RectTransform shootingPosition1;
     [SerializeField] RectTransform shootingPosition2;
 
-    private int rotationValue = 57;
+    private int rotationValue = 60;
 
     //set a variable that handles the max amount of bullets before we're done with the task
 
@@ -34,15 +34,13 @@ public class LightningGamePanel : MonoBehaviour
     {
         gameInitiated = true;
 
-        Debug.Log($"When game start - shoot position 1: {shootingPosition1.position} \n shoot position 2: {shootingPosition2.position}");
-
         if (gameInitiated)
         {
             InstantiateAndSetBullets(projectilesList, projectile, shootingPosition1, shootingPosition2);
         }
 
-        //Debug.Log($"shoot position 1: {shootingPosition1.position} \n shoot position 2: {shootingPosition2.position}");
-        //SetValues(projectilesList, projectile, shootingPosition1, shootingPosition2);
+        Debug.Log($"Bullet 1 position after function: {projectilesList[0].transform.position}");
+        Debug.Log($"Bullet 2 position after function: {projectilesList[1].transform.position}");
     }
 
     private void Update()
@@ -63,14 +61,10 @@ public class LightningGamePanel : MonoBehaviour
             if (i % 2 != 0)
             {
                 projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(100, 100));
-                //Debug.Log($"pos 1 bullet's position: {projectilesList[i].transform.position}");
-                //Debug.Log($"pos 1 bullet rotation: {projectilesList[i].transform.rotation}");
             }
             else
             {
                 projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(-100, 100));
-                //Debug.Log($"pos 2 bullets position: {projectilesList[i].transform.position}");
-                //Debug.Log($"pos 2 bullet rotation: {projectilesList[i].transform.rotation}");
             }
         }
     }
@@ -90,14 +84,15 @@ public class LightningGamePanel : MonoBehaviour
         }
 
         //Set position of bullets
-        for (int i = 0; i < bulletsCollection.Count; i++)
+        Debug.Log($"The list size: {bulletsCollection.Count}");
+        for (int i = 0; i < bulletsCollection.Count; i++)        //will be 2 for now
         {
-            if (i % 2 != 0)          //bullets at position 1
+            if (i % 2 != 0)       //bullets at position 1
             {
                 bulletsCollection[i].transform.position = pos1Position;
                 Debug.Log($"bullet pos 1 start position: {bulletsCollection[i].transform.position}");
             }
-            else     //bullets at position 2
+            else    //bullets at position 2
             {
                 bulletsCollection[i].transform.position = pos2Position;
                 Debug.Log($"bullet pos 2 start position: {bulletsCollection[i].transform.position}");
@@ -105,7 +100,7 @@ public class LightningGamePanel : MonoBehaviour
         }
 
         //Set rotation of bullets
-        for (int i = 0; i < bulletsCollection.Count; i++)
+        for (int i = 0; i < bulletsCollection.Count; i++)        //will be 2 for now
         {
             bulletsCollection[i].transform.rotation = Quaternion.identity;
 
@@ -126,6 +121,9 @@ public class LightningGamePanel : MonoBehaviour
     #region Game mechanic-smooth functions
     public void ExitOnClick()   //used by a button in the game panel
     {
+        //remove all the relevant stuff upon closing the game panel
+
+
         Hide();
     }
 
