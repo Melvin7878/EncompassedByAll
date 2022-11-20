@@ -1994,11 +1994,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   masterTask: {fileID: 2138326611}
-  projectile: {fileID: 6801614034475979187, guid: 2f86bb42a132186458b964343ce1c0ef, type: 3}
+  canvasParent: {fileID: 1729266542496878263}
+  preFabProjectile: {fileID: 6801614034475979187, guid: 2f86bb42a132186458b964343ce1c0ef, type: 3}
   projectilesList: []
   shootingPosition1: {fileID: 1729266542496878267}
   shootingPosition2: {fileID: 1729266542496878266}
-  gameInitiated: 0
 --- !u!224 &1729266542496878266 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8620645301625535074, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
