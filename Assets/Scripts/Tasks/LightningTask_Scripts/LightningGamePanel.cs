@@ -39,8 +39,8 @@ public class LightningGamePanel : MonoBehaviour
 
 
     //Score related variables
-    private const int completionScore = 5;
     [SerializeField] int currentProgress = 0;
+    private const int completionScore = 5;
 
 
 
