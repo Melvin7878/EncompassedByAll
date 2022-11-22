@@ -34,11 +34,13 @@ public class LightningGamePanel : MonoBehaviour
     [Header("Completion related variables")]
 
     //Tesla detection related variables
-    CircleCollider2D teslaTrigger;
+    [SerializeField] GameObject teslaButton;
+    [SerializeField] float teslaRadius;
 
 
     //Score related variables
     private const int completionScore = 5;
+    [SerializeField] int currentProgress = 0;
 
 
 
@@ -54,6 +56,8 @@ public class LightningGamePanel : MonoBehaviour
         gameInitiated = true;
         gameOngoing = true;
 
+        //debate addlistner here for the tesla button!
+
         if (gameInitiated)
         {
             InstantiateAndSetBullets(projectilesList, preFabProjectile, shootingPosition1, shootingPosition2, canvasParent);
@@ -66,7 +70,12 @@ public class LightningGamePanel : MonoBehaviour
     private void Update()
     {
         //Check if the bullet is inside the area of the tesla
-
+        Collider2D teslaSuccessArea = Physics2D.OverlapCircle(teslaButton.transform.position, teslaRadius);
+        for (int i = 0; i < projectileAmount; i++)
+        {
+            //check if bullet tag is in the overlap circle
+            //also check if we're tapping the button 
+        }
 
 
 
@@ -141,5 +150,14 @@ public class LightningGamePanel : MonoBehaviour
         gameObject.SetActive(false);
         GameManager.Instance.EventSystem.firstSelectedGameObject = gameObject;
     }
+    #endregion
+
+    #region Unity based functions
+    private void OnDrawGizmos()
+    {
+        //tesla overlap circle
+        Gizmos.DrawSphere(teslaButton.transform.position, teslaRadius);
+    }
+
     #endregion
 }

@@ -185,6 +185,11 @@ Transform:
   m_Father: {fileID: 725300591}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &88207203 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2160887516481156045, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
+  m_PrefabInstance: {fileID: 1729266542496878262}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &145166271
 GameObject:
   m_ObjectHideFlags: 0
@@ -2011,6 +2016,9 @@ MonoBehaviour:
   progressCounter: {fileID: 2113692787}
   shootingPosition1: {fileID: 1729266542496878267}
   shootingPosition2: {fileID: 1729266542496878266}
+  teslaButton: {fileID: 88207203}
+  teslaRadius: 0
+  currentProgress: 0
 --- !u!224 &1729266542496878266 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8620645301625535074, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
