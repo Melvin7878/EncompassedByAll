@@ -34,14 +34,14 @@ public class LightningGamePanel : MonoBehaviour
     [Header("Completion related variables")]
 
     //Tesla detection related variables
-    [SerializeField] GameObject teslaButton;
+    [SerializeField] Button teslaButton;
     [SerializeField] float teslaRadius;
+    private Collider2D teslaSuccessArea;
 
 
     //Score related variables
     [SerializeField] int currentProgress = 0;
     private const int completionScore = 5;
-
 
 
     [Header("Resolve related variables")]
@@ -62,22 +62,16 @@ public class LightningGamePanel : MonoBehaviour
         {
             InstantiateAndSetBullets(projectilesList, preFabProjectile, shootingPosition1, shootingPosition2, canvasParent);
         }
+        teslaSuccessArea = Physics2D.OverlapCircle(teslaButton.transform.position, teslaRadius);
 
         //Set the beginning score
-        progressCounter.text = $"0 / {completionScore}";
+        progressCounter.text = $"{currentProgress} / {completionScore}";
     }
 
     private void Update()
     {
-        //Check if the bullet is inside the area of the tesla
-        Collider2D teslaSuccessArea = Physics2D.OverlapCircle(teslaButton.transform.position, teslaRadius);
-        for (int i = 0; i < projectileAmount; i++)
-        {
-            //check if bullet tag is in the overlap circle
-            //also check if we're tapping the button 
-        }
-
-
+        //Everytime teslaButton is clicked run the designated function
+        teslaButton.onClick.AddListener(CheckIfBulletIsInRange);
 
         //update progress
 
@@ -116,8 +110,6 @@ public class LightningGamePanel : MonoBehaviour
         Vector2 pos2Position = new Vector2(shootPos2.position.x, shootPos2.position.y);
 
         ////Instantiate the "starting" bullets
-        //for (int i = 0; i < projectileAmount; i++)
-        //{
         //Bullet 1 instantiated and added to the list
         GameObject bullet1 = Instantiate(bulletPreFab, pos1Position, Quaternion.Euler(0, 0, rotationValue), parent);
         bulletsCollection.Add(bullet1);
@@ -125,7 +117,21 @@ public class LightningGamePanel : MonoBehaviour
         //Bullet 2 instantiated and added to the list
         GameObject bullet2 = Instantiate(bulletPreFab, pos2Position, Quaternion.Euler(0, 0, -rotationValue), parent);
         bulletsCollection.Add(bullet2);
-        //}
+    }
+
+    void CheckIfBulletIsInRange()
+    {
+        //Check if bullet tag is in the overlap circle
+        //also check if we're tapping the button
+        if (teslaSuccessArea.CompareTag("Bullet"))
+        {
+            //We have a bullet in range and have clicked the button
+            //foreach (Collider2D bullet in teslaSuccessArea.)
+            //{
+
+            //}
+            //Destroy(projectilesList[i]);
+        }
     }
     #endregion
 
