@@ -2022,8 +2022,9 @@ MonoBehaviour:
   progressCounter: {fileID: 2113692787}
   shootingPosition1: {fileID: 1729266542496878267}
   shootingPosition2: {fileID: 1729266542496878266}
+  bulletSpawnCooldown: 0
   teslaButton: {fileID: 248307666}
-  teslaRadius: 15
+  teslaRadius: 85
   currentProgress: 0
 --- !u!224 &1729266542496878266 stripped
 RectTransform:

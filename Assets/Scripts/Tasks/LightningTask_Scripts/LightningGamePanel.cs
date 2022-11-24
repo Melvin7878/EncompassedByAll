@@ -16,7 +16,6 @@ public class LightningGamePanel : MonoBehaviour
     //Shooting related objects and references
     [SerializeField] GameObject preFabProjectile;  //prefab bullet
     [SerializeField] List<GameObject> projectilesList = new List<GameObject>();
-    private const int expectedProjectileAmount = 2;
 
     //Completion related objects and references
     [SerializeField] TextMeshProUGUI progressCounter;
@@ -27,8 +26,10 @@ public class LightningGamePanel : MonoBehaviour
     [SerializeField] RectTransform shootingPosition2;
 
     private int rotationValue = 60;
+    private const int expectedProjectileAmount = 2;
+    private int indexOfDestroyedBullet;
 
-    [SerializeField] [Range(1, 1.5f)] float bulletSpawnCooldown;
+    [SerializeField][Range(1, 1.5f)] float bulletSpawnCooldown;
 
     //set a variable that handles the max amount of bullets before we're done with the task
 
@@ -43,7 +44,7 @@ public class LightningGamePanel : MonoBehaviour
 
     //Score related variables
     [SerializeField] int currentProgress = 0;
-    private const int completionScore = 5;
+    private const int COMPLETIONSCORE = 5;
 
 
     [Header("Resolve related variables")]
@@ -58,8 +59,6 @@ public class LightningGamePanel : MonoBehaviour
         gameInitiated = true;
         gameOngoing = true;
 
-        //debate addlistner here for the tesla button!
-
         if (gameInitiated)
         {
             InstantiateAndSetBullets(projectilesList, preFabProjectile, shootingPosition1, shootingPosition2, canvasParent);
@@ -67,7 +66,7 @@ public class LightningGamePanel : MonoBehaviour
         teslaSuccessArea = Physics2D.OverlapCircleAll(teslaButton.transform.position, teslaRadius);
 
         //Set the beginning score
-        progressCounter.text = $"{currentProgress} / {completionScore}";
+        progressCounter.text = $"0 / {COMPLETIONSCORE}";
     }
 
     private void Update()
@@ -77,9 +76,8 @@ public class LightningGamePanel : MonoBehaviour
 
 
         ////Update progress
-
         // Change the progress counter
-        progressCounter.text = $"{currentProgress} / {completionScore}";
+        progressCounter.text = $"{currentProgress} / {COMPLETIONSCORE}";
 
         //Spawn in more bullets when there's less than the expected amount (2)
         if (projectilesList.Count < expectedProjectileAmount)
@@ -112,16 +110,17 @@ public class LightningGamePanel : MonoBehaviour
     }
 
     #region Shooting related functions
-    private void InstantiateAndSetBullets(List<GameObject> bulletsCollection, GameObject bulletPreFab, RectTransform shootPos1, RectTransform shootPos2, Transform parent)
+    private void InstantiateAndSetBullets(List<GameObject> bulletsCollection, GameObject bulletPreFab, 
+        RectTransform shootPos1, RectTransform shootPos2, Transform parent)
     {
         Vector2 pos1Position = new Vector2(shootPos1.position.x, shootPos1.position.y);
         Vector2 pos2Position = new Vector2(shootPos2.position.x, shootPos2.position.y);
         float spawnTimer = Time.deltaTime;
 
         ////Instantiate the "starting" bullets
-        for (int i = 0; i < expectedProjectileAmount; i++)
+        if (spawnTimer >= bulletSpawnCooldown)
         {
-            if (spawnTimer >= bulletSpawnCooldown)
+            for (int i = 0; i < expectedProjectileAmount; i++)
             {
                 if (i % 2 == 0 && projectilesList.Count <= expectedProjectileAmount)
                 {
@@ -140,6 +139,7 @@ public class LightningGamePanel : MonoBehaviour
                     return;
                 }
             }
+            spawnTimer = 0;
         }
     }
 
@@ -148,23 +148,28 @@ public class LightningGamePanel : MonoBehaviour
         //Check if bullet tag is in the overlap circle
         //also check if we're tapping the button
 
-        foreach (Collider2D collisionHit in teslaSuccessArea)
+        if (teslaSuccessArea != null)
         {
-            //If there's a bullet around the tesla
-            if (collisionHit.CompareTag("Bullet"))
+            foreach (Collider2D collisionHit in teslaSuccessArea)
             {
-                //Destroy the bullet that is in the tesla area on click
-                Destroy(collisionHit.gameObject);
-                Debug.Log("Destroyed bullet");
+                Debug.Log("In foreach");
+                //If there's a bullet around the tesla
+                if (collisionHit.CompareTag("Bullet"))
+                {
+                    Debug.Log("Have clicked");
+                    //Destroy the bullet that is in the tesla area on click
+                    Destroy(collisionHit.gameObject);
+                    Debug.Log("Destroyed bullet");
 
-                //change relevant values
-                currentProgress++;
+                    //change relevant values
+                    currentProgress++;
 
-                //Save the index of the destroyed gameobject within the list
-                //then run that index against the for loops in fixed up. and 
-                //the instantiateAndSet bullets function
+                    //Save the index of the destroyed gameobject within the list
+                    //then run that index against the for loops in fixed up. and 
+                    //the instantiateAndSet bullets function
 
-
+                    //indexOfDestroyedBullet = 
+                }
             }
         }
     }
