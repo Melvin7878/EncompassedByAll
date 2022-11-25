@@ -27,7 +27,7 @@ public class LightningGamePanel : MonoBehaviour
 
     private int rotationValue = 60;
     private float spawnTimer = 0;  //timer set in update
-    private const int expectedProjectileAmount = 2;
+    private const int EXPECTEDPROJECTILEAMOUNT = 2;
     private bool firstBullet;
 
     private const float BULLETSPAWNCOOLDOWN = 5;
@@ -74,12 +74,17 @@ public class LightningGamePanel : MonoBehaviour
         {
             spawnTimer += Time.deltaTime;
         }
+        else
+        {
+            spawnTimer = 0;
+        }
+
         ////Update progress
         // Change the progress counter accordingly
         progressCounter.text = $"{currentProgress} / {COMPLETIONSCORE}";
 
         //Spawn in more bullets when there's less than the expected amount (2)
-        if (projectilesList.Count < expectedProjectileAmount)
+        if (projectilesList.Count < EXPECTEDPROJECTILEAMOUNT)
         {
             InstantiateAndSetBullets(projectilesList, preFabProjectile, shootingPosition1, shootingPosition2, canvasParent, spawnTimer);
         }
@@ -87,17 +92,17 @@ public class LightningGamePanel : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (projectilesList != null || projectilesList.Count < expectedProjectileAmount && 
+        if (projectilesList != null || projectilesList.Count < EXPECTEDPROJECTILEAMOUNT && 
             spawnTimer >= BULLETSPAWNCOOLDOWN)
         {
             //Give the bullets a rigidbody and add force
-            for (int i = 0; i < expectedProjectileAmount; i++)
+            for (int i = 0; i < EXPECTEDPROJECTILEAMOUNT; i++)
             {
-                if (i % 2 == 0 && projectilesList.Count <= expectedProjectileAmount)     //bullet at position 2
+                if (i % 2 == 0)     //bullet at position 2
                 {
                     projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(-2, 3));
                 }
-                else if (i % 2 != 0 && projectilesList.Count <= expectedProjectileAmount)    //bullets at position 1
+                else if (i % 2 != 0)    //bullets at position 1
                 {
                     projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(2, 3));
                 }
@@ -123,19 +128,21 @@ public class LightningGamePanel : MonoBehaviour
         ////Instantiate the "starting" bullets
         if (cooldown >= BULLETSPAWNCOOLDOWN)
         {
-            for (int i = 0; i < expectedProjectileAmount; i++)
+            for (int i = 0; i < EXPECTEDPROJECTILEAMOUNT; i++)
             {
-                if (i % 2 == 0 && projectilesList.Count <= expectedProjectileAmount)
+                if (i % 2 == 0 && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT)
                 {
                     //Bullet 2 instantiated and added to the list
                     GameObject bullet = Instantiate(bulletPreFab, pos2Position, Quaternion.Euler(0, 0, -rotationValue), parent);
                     bulletsCollection.Add(bullet);
+                    return;
                 }
-                else if (i % 2 != 0 && projectilesList.Count <= expectedProjectileAmount || firstBullet)
+                else if (i % 2 != 0 && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT && firstBullet)
                 {
                     //Bullet 1 instantiated and added to the list
                     GameObject bullet = Instantiate(bulletPreFab, pos1Position, Quaternion.Euler(0, 0, rotationValue), parent);
                     bulletsCollection.Add(bullet);
+                    return;
                 }
                 else
                 {
