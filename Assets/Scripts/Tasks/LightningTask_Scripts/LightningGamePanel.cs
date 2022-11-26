@@ -9,7 +9,6 @@ public class LightningGamePanel : MonoBehaviour
     [Header("Create objects and reference")]
 
     //"General" variables
-    GameObject lastFirstSelectedGameObject;
     [SerializeField] Task masterTask;
     [SerializeField] Transform canvasParent;
 
@@ -27,10 +26,14 @@ public class LightningGamePanel : MonoBehaviour
 
     private int rotationValue = 60;
     private float spawnTimer = 0;  //timer set in update
-    private const int expectedProjectileAmount = 2;
-    private bool firstBullet;
-
+    private const int EXPECTEDPROJECTILEAMOUNT = 2;
     private const float BULLETSPAWNCOOLDOWN = 5;
+
+    [SerializeField] int BULLETHORIZONTALVELOCITY = 2;
+
+    private bool firstBullet = true;
+    private bool latestPos1 = false;
+    private bool latestPos2 = false;
 
 
     [Header("Completion related variables")]
@@ -45,7 +48,6 @@ public class LightningGamePanel : MonoBehaviour
     [SerializeField] int currentProgress = 0;
     private const int COMPLETIONSCORE = 5;
 
-
     private bool gameInitiated = false;
 
 
@@ -53,7 +55,6 @@ public class LightningGamePanel : MonoBehaviour
     void Start()
     {
         gameInitiated = true;
-        firstBullet = true;
 
         if (gameInitiated)
         {
@@ -74,42 +75,53 @@ public class LightningGamePanel : MonoBehaviour
         {
             spawnTimer += Time.deltaTime;
         }
+        else if (spawnTimer > BULLETSPAWNCOOLDOWN && projectilesList.Count < EXPECTEDPROJECTILEAMOUNT)
+        {
+            spawnTimer = 0;
+        }
+
         ////Update progress
         // Change the progress counter accordingly
         progressCounter.text = $"{currentProgress} / {COMPLETIONSCORE}";
 
-        //Spawn in more bullets when there's less than the expected amount (2)
-        if (projectilesList.Count < expectedProjectileAmount)
+        //Spawn in more bullets when there's less than the expected amount (2) on screen
+        if (projectilesList.Count < EXPECTEDPROJECTILEAMOUNT)
         {
             InstantiateAndSetBullets(projectilesList, preFabProjectile, shootingPosition1, shootingPosition2, canvasParent, spawnTimer);
+        }
+
+        //Set win condition
+        if (currentProgress == COMPLETIONSCORE)
+        {
+            ////We've completed the task
+            //remove all the relevant stuff upon hiding the game panel
+            for (int i = 0; i < projectilesList.Count; i++)
+            {
+                Destroy(projectilesList[i]);
+                projectilesList.Remove(projectilesList[i]);
+            }
+
+            masterTask.SetAsResolved();
+            Invoke("Hide", 0.7f);
+
+            spawnTimer = 0;
+            currentProgress = 0;
         }
     }
 
     private void FixedUpdate()
     {
-        if (projectilesList != null || projectilesList.Count < expectedProjectileAmount && 
-            spawnTimer >= BULLETSPAWNCOOLDOWN)
+        //Give the bullets a rigidbody and add force
+        for (int i = 0; i < projectilesList.Count; i++)
         {
-            //Give the bullets a rigidbody and add force
-            for (int i = 0; i < expectedProjectileAmount; i++)
+            if (i % 2 == 0 && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT)     //bullet at position 2
             {
-                if (i % 2 == 0 && projectilesList.Count <= expectedProjectileAmount)     //bullet at position 2
-                {
-                    projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(-2, 3));
-                }
-                else if (i % 2 != 0 && projectilesList.Count <= expectedProjectileAmount)    //bullets at position 1
-                {
-                    projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(2, 3));
-                }
-                else
-                {
-                    return;
-                }
+                projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(BULLETHORIZONTALVELOCITY, 3));
             }
-        }
-        else
-        {
-            return;
+            else if (i % 2 != 0 && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT)    //bullets at position 1
+            {
+                projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(-BULLETHORIZONTALVELOCITY, 3));
+            }
         }
     }
 
@@ -121,37 +133,39 @@ public class LightningGamePanel : MonoBehaviour
         Vector2 pos2Position = new Vector2(shootPos2.position.x, shootPos2.position.y);
 
         ////Instantiate the "starting" bullets
-        if (cooldown >= BULLETSPAWNCOOLDOWN)
+        if (cooldown >= BULLETSPAWNCOOLDOWN && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT || firstBullet)
         {
-            for (int i = 0; i < expectedProjectileAmount; i++)
+            for (int i = 0; i < EXPECTEDPROJECTILEAMOUNT; i++)
             {
-                if (i % 2 == 0 && projectilesList.Count <= expectedProjectileAmount)
+                if (i % 2 == 0 && latestPos1 && !firstBullet)
                 {
-                    //Bullet 2 instantiated and added to the list
+                    //Bullet at pos2 instantiated and added to the list
                     GameObject bullet = Instantiate(bulletPreFab, pos2Position, Quaternion.Euler(0, 0, -rotationValue), parent);
                     bulletsCollection.Add(bullet);
+                    latestPos2 = true;
+                    latestPos1 = false;
+                    return;
                 }
-                else if (i % 2 != 0 && projectilesList.Count <= expectedProjectileAmount || firstBullet)
+                else if (i % 2 != 0 && latestPos2 || firstBullet)
                 {
-                    //Bullet 1 instantiated and added to the list
+                    //Bullet at pos1 instantiated and added to the list
                     GameObject bullet = Instantiate(bulletPreFab, pos1Position, Quaternion.Euler(0, 0, rotationValue), parent);
                     bulletsCollection.Add(bullet);
-                }
-                else
-                {
+
+                    latestPos1 = true;
+                    latestPos2 = false;
+                    firstBullet = false;
                     return;
                 }
             }
-            firstBullet = false;
-            cooldown = 0;
         }
     }
 
     void CheckIfBulletIsInRange()
     {
-        //Check if bullet tag is in the overlap circle
-
         teslaSuccessArea = Physics2D.OverlapCircleAll(teslaButton.transform.position, teslaRadius);
+
+        //Check if bullet tag is in the overlap circle
         foreach (Collider2D collisionHit in teslaSuccessArea)
         {
             //If there's a bullet around the tesla and it has the tag "Bullet"
@@ -163,24 +177,36 @@ public class LightningGamePanel : MonoBehaviour
                 //Make relevant changes to destroying bullet
                 currentProgress++;
                 projectilesList.Remove(collisionHit.gameObject);
+
+                //Change direction of the velocity on the bullets on screen thanks
+                //to changes in the list
+                BULLETHORIZONTALVELOCITY = BULLETHORIZONTALVELOCITY * -1;
             }
         }
     }
     #endregion
 
     #region Game mechanic-smooth functions
-    public void ExitOnClick()   //used by a button in the game panel
+    public void ExitOnClick()   //used by the "hide" button in the game panel
     {
-        //remove all the relevant stuff upon closing the game panel
+        //remove all the relevant stuff upon hiding the game panel
+        for (int i = 0; i < projectilesList.Count; i++)
+        {
+            Destroy(projectilesList[i]);
+            projectilesList.Remove(projectilesList[i]);
+        }
 
-
+        //put away the game panel with the "Hide" function
         Hide();
+
+        spawnTimer = 0;
+        currentProgress = 0;
     }
 
     public void Show()
     {
         gameObject.SetActive(true);
-        lastFirstSelectedGameObject = GameManager.Instance.EventSystem.firstSelectedGameObject;
+        //lastFirstSelectedGameObject = GameManager.Instance.EventSystem.firstSelectedGameObject;
         GameManager.Instance.EventSystem.firstSelectedGameObject = gameObject;
     }
 
@@ -188,13 +214,6 @@ public class LightningGamePanel : MonoBehaviour
     {
         gameObject.SetActive(false);
         GameManager.Instance.EventSystem.firstSelectedGameObject = gameObject;
-    }
-    #endregion
-
-    #region Unity based functions
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(teslaButton.transform.position, teslaRadius);
     }
     #endregion
 }

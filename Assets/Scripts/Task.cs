@@ -52,6 +52,9 @@ public abstract class Task : MonoBehaviour
     public void SetAsResolved()
     {
         resolved = true;
+
+        //"Task completed" text
+
     }
     #endregion
 
