@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2443696910081166270}
   - component: {fileID: 7144638266398275574}
   - component: {fileID: 6565922590150214809}
+  - component: {fileID: 7230562025139455416}
   m_Layer: 0
   m_Name: Lightning_Task_Bullet
   m_TagString: Bullet
@@ -125,3 +126,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &7230562025139455416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801614034475979187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc1d8e7c41ba85e41880790c16b0bad8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -14,7 +14,7 @@ public class LightningGamePanel : MonoBehaviour
 
     //Shooting related objects and references
     [SerializeField] GameObject preFabProjectile;  //prefab bullet
-    [SerializeField] List<GameObject> projectilesList = new List<GameObject>();
+    public List<GameObject> projectilesList = new List<GameObject>();
 
     //Completion related objects and references
     [SerializeField] TextMeshProUGUI progressCounter;
@@ -24,19 +24,19 @@ public class LightningGamePanel : MonoBehaviour
     [SerializeField] RectTransform shootingPosition1;
     [SerializeField] RectTransform shootingPosition2;
 
-    private int rotationValue = 60;
-    private float spawnTimer = 0;  //timer set in update
+    private const int ROTATIONVALUE = 60;
+    public float spawnTimer = 0;  //timer set in update
     private const int EXPECTEDPROJECTILEAMOUNT = 2;
     private const float BULLETSPAWNCOOLDOWN = 5;
 
-    [SerializeField] int BULLETHORIZONTALVELOCITY = 2;
+    [SerializeField] int horizontalBulletVelocity = 2;
 
     private bool firstBullet = true;
     private bool latestPos1 = false;
     private bool latestPos2 = false;
 
 
-    [Header("Completion related variables")]
+    [Header("Progression related variables")]
 
     //Tesla detection related variables
     [SerializeField] Button teslaButton;
@@ -48,18 +48,11 @@ public class LightningGamePanel : MonoBehaviour
     [SerializeField] int currentProgress = 0;
     private const int COMPLETIONSCORE = 5;
 
-    private bool gameInitiated = false;
-
 
     // Start is called before the first frame update
     void Start()
     {
-        gameInitiated = true;
-
-        if (gameInitiated)
-        {
-            InstantiateAndSetBullets(projectilesList, preFabProjectile, shootingPosition1, shootingPosition2, canvasParent, spawnTimer);
-        }
+        InstantiateAndSetBullets(projectilesList, preFabProjectile, shootingPosition1, shootingPosition2, canvasParent, spawnTimer);
 
         //Set the beginning score
         progressCounter.text = $"0 / {COMPLETIONSCORE}";
@@ -75,7 +68,7 @@ public class LightningGamePanel : MonoBehaviour
         {
             spawnTimer += Time.deltaTime;
         }
-        else if (spawnTimer > BULLETSPAWNCOOLDOWN && projectilesList.Count < EXPECTEDPROJECTILEAMOUNT)
+        else if (spawnTimer >= BULLETSPAWNCOOLDOWN && projectilesList.Count < EXPECTEDPROJECTILEAMOUNT)
         {
             spawnTimer = 0;
         }
@@ -94,7 +87,7 @@ public class LightningGamePanel : MonoBehaviour
         if (currentProgress == COMPLETIONSCORE)
         {
             ////We've completed the task
-            //remove all the relevant stuff upon hiding the game panel
+            //Remove and change all the relevant stuff upon closing the game panel
             for (int i = 0; i < projectilesList.Count; i++)
             {
                 Destroy(projectilesList[i]);
@@ -114,20 +107,20 @@ public class LightningGamePanel : MonoBehaviour
         //Give the bullets a rigidbody and add force
         for (int i = 0; i < projectilesList.Count; i++)
         {
-            if (i % 2 == 0 && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT)     //bullet at position 2
+            if (i % 2 == 0 && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT && projectilesList[i] != null)     //bullet at position 1
             {
-                projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(BULLETHORIZONTALVELOCITY, 3));
+                projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(horizontalBulletVelocity, 3));
             }
-            else if (i % 2 != 0 && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT)    //bullets at position 1
+            else if (i % 2 != 0 && projectilesList.Count <= EXPECTEDPROJECTILEAMOUNT && projectilesList[i] != null)    //bullets at position 2
             {
-                projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(-BULLETHORIZONTALVELOCITY, 3));
+                projectilesList[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(-horizontalBulletVelocity, 3));
             }
         }
     }
 
     #region Shooting related functions
     private void InstantiateAndSetBullets(List<GameObject> bulletsCollection, GameObject bulletPreFab,
-        RectTransform shootPos1, RectTransform shootPos2, Transform parent, float cooldown)
+        RectTransform shootPos1, RectTransform shootPos2, Transform canvasPar, float cooldown)
     {
         Vector2 pos1Position = new Vector2(shootPos1.position.x, shootPos1.position.y);
         Vector2 pos2Position = new Vector2(shootPos2.position.x, shootPos2.position.y);
@@ -140,7 +133,7 @@ public class LightningGamePanel : MonoBehaviour
                 if (i % 2 == 0 && latestPos1 && !firstBullet)
                 {
                     //Bullet at pos2 instantiated and added to the list
-                    GameObject bullet = Instantiate(bulletPreFab, pos2Position, Quaternion.Euler(0, 0, -rotationValue), parent);
+                    GameObject bullet = Instantiate(bulletPreFab, pos2Position, Quaternion.Euler(0, 0, -ROTATIONVALUE), canvasPar);
                     bulletsCollection.Add(bullet);
                     latestPos2 = true;
                     latestPos1 = false;
@@ -149,7 +142,7 @@ public class LightningGamePanel : MonoBehaviour
                 else if (i % 2 != 0 && latestPos2 || firstBullet)
                 {
                     //Bullet at pos1 instantiated and added to the list
-                    GameObject bullet = Instantiate(bulletPreFab, pos1Position, Quaternion.Euler(0, 0, rotationValue), parent);
+                    GameObject bullet = Instantiate(bulletPreFab, pos1Position, Quaternion.Euler(0, 0, ROTATIONVALUE), canvasPar);
                     bulletsCollection.Add(bullet);
 
                     latestPos1 = true;
@@ -173,21 +166,21 @@ public class LightningGamePanel : MonoBehaviour
             {
                 //Destroy the bullet that is in the tesla area on click
                 Destroy(collisionHit.gameObject);
+                projectilesList.Remove(collisionHit.gameObject);
 
                 //Make relevant changes to destroying bullet
                 currentProgress++;
-                projectilesList.Remove(collisionHit.gameObject);
 
                 //Change direction of the velocity on the bullets on screen thanks
                 //to changes in the list
-                BULLETHORIZONTALVELOCITY = BULLETHORIZONTALVELOCITY * -1;
+                horizontalBulletVelocity = horizontalBulletVelocity * -1;
             }
         }
     }
     #endregion
 
-    #region Game mechanic-smooth functions
-    public void ExitOnClick()   //used by the "hide" button in the game panel
+    #region Panel Management
+    public void ExitOnClick()   //used by the "hide" button in the gamepanel
     {
         //remove all the relevant stuff upon hiding the game panel
         for (int i = 0; i < projectilesList.Count; i++)
