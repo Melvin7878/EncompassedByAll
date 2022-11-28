@@ -1725,6 +1725,11 @@ Transform:
   m_Father: {fileID: 725300591}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1919033006 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 7925367677467897827, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
+  m_PrefabInstance: {fileID: 1729266542496878262}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2113692787 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1281684264709734542, guid: 8ef93e2ffb2ec0042b77e07b64130a64, type: 3}
@@ -2020,8 +2025,11 @@ MonoBehaviour:
   preFabProjectile: {fileID: 6801614034475979187, guid: 2f86bb42a132186458b964343ce1c0ef, type: 3}
   projectilesList: []
   progressCounter: {fileID: 2113692787}
+  teslaCollider: {fileID: 1919033006}
+  bulletCollider: {fileID: 2138326610}
   shootingPosition1: {fileID: 1729266542496878267}
   shootingPosition2: {fileID: 1729266542496878266}
+  spawnTimer: 0
   horizontalBulletVelocity: 2
   teslaButton: {fileID: 248307666}
   teslaRadius: 77

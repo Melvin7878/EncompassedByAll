@@ -19,17 +19,21 @@ public class LightningGamePanel : MonoBehaviour
     //Completion related objects and references
     [SerializeField] TextMeshProUGUI progressCounter;
 
+    [SerializeField] CircleCollider2D teslaCollider;
+    [SerializeField] BoxCollider2D bulletCollider;
+
+
     [Header("Shooting/Position related variables")]
 
     [SerializeField] RectTransform shootingPosition1;
     [SerializeField] RectTransform shootingPosition2;
 
     private const int ROTATIONVALUE = 60;
-    public float spawnTimer = 0;  //timer set in update
+    private float spawnTimer = 0;  //timer set in update
     private const int EXPECTEDPROJECTILEAMOUNT = 2;
     private const float BULLETSPAWNCOOLDOWN = 5;
 
-    [SerializeField] int horizontalBulletVelocity = 2;
+    public int horizontalBulletVelocity = 2;
 
     private bool firstBullet = true;
     private bool latestPos1 = false;
@@ -43,19 +47,24 @@ public class LightningGamePanel : MonoBehaviour
     [SerializeField] float teslaRadius;
     private Collider2D[] teslaSuccessArea;
 
-
     //Score related variables
     [SerializeField] int currentProgress = 0;
     private const int COMPLETIONSCORE = 5;
 
 
+    private void Awake()
+    {
+        //Avoid the velocity being reversed upon opening the task
+        horizontalBulletVelocity = Mathf.Abs(horizontalBulletVelocity);
+
+        //Set the beginning score
+        progressCounter.text = $"0 / {COMPLETIONSCORE}";
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         InstantiateAndSetBullets(projectilesList, preFabProjectile, shootingPosition1, shootingPosition2, canvasParent, spawnTimer);
-
-        //Set the beginning score
-        progressCounter.text = $"0 / {COMPLETIONSCORE}";
     }
 
     private void Update()
@@ -63,6 +72,7 @@ public class LightningGamePanel : MonoBehaviour
         //Everytime teslaButton is clicked run the designated function
         teslaButton.onClick.AddListener(CheckIfBulletIsInRange);
 
+        ////Update progress
         //Start bullet spawn timer
         if (spawnTimer <= BULLETSPAWNCOOLDOWN)
         {
@@ -72,10 +82,9 @@ public class LightningGamePanel : MonoBehaviour
         {
             spawnTimer = 0;
         }
-
-        ////Update progress
         // Change the progress counter accordingly
         progressCounter.text = $"{currentProgress} / {COMPLETIONSCORE}";
+
 
         //Spawn in more bullets when there's less than the expected amount (2) on screen
         if (projectilesList.Count < EXPECTEDPROJECTILEAMOUNT)
@@ -95,7 +104,7 @@ public class LightningGamePanel : MonoBehaviour
             }
 
             masterTask.SetAsResolved();
-            Invoke("Hide", 0.7f);
+            Invoke("Hide", 0.6f);
 
             spawnTimer = 0;
             currentProgress = 0;
